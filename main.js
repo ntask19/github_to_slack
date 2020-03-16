@@ -24,10 +24,21 @@ function getGitHubMail() {
     var msgs = GmailApp.getMessagesForThread(threads[i]);
 
     for (var j = 0; j < msgs.length; j++) {
-      Logger.log(msgs[j].getSubject());
-      Logger.log(msgs[j].getBody());
+      var msg = msgs[j];
+
+      var brTagStripped = msg.getBody().replace(/(<br>|<br \/>)/gi, '\n');
+      var stripped = brTagStripped.replace(/(<([^>]+)>)/ig,"");
+      var pos = stripped.indexOf("&mdash;");
+      if (pos >= 0) {
+        stripped = stripped.substring(0, pos);
+      }
+
+      var postMessage = "*件名：[" + msg.getSubject() + "]* \n" + "本文" +  stripped + "https://github.com";
+      Logger.log(postMessage);
+      sendToSlack(postMessage);
     }
 
     threads[i].moveToTrash();
+
   }
 }
