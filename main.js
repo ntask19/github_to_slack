@@ -1,5 +1,19 @@
-function myFunction() {
+var postChannel = "{チャンネル名}";
+var url = "{webhook}";
 
+function sendToSlack(body) {
+  var data = { "channel" : postChannel, "username" : "GitHub", "text" : body, "icon_emoji" : ":github:" };
+  var payload = JSON.stringify(data);
+  var options = {
+    "method" : "POST",
+    "contentType" : "application/json",
+    "payload" : payload
+  };
+  var response = UrlFetchApp.fetch(url, options);
+}
+
+function test() {
+  sendToSlack("テスト通知確認です");
 }
 
 function getGitHubMail() {
